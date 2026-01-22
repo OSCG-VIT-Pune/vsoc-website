@@ -75,7 +75,7 @@ export default function Home() {
   const timelineEvents = [
     { date: '14-15 FEB', title: 'Mentor Registration', desc: 'Mentors sign up to lead projects', color: 'cyan', icon: '📝' },
     { date: '15-27 FEB', title: 'Project Listing', desc: 'Open source projects are announced', color: 'magenta', icon: '📋' },
-    { date: '28 FEB', title: 'Student Registeration', desc: 'Students sign up to participate', color: 'red', icon: '📋' },
+    { date: '28 FEB', title: 'Student Registration', desc: 'Students sign up to participate', color: 'red', icon: '📋' },
     { date: '1 MAR - 20 APR', title: 'Coding Period', desc: '50 Days of Code & Contribution', color: 'green', icon: '💻' },
     { date: 'LATE APRIL', title: 'Results Declared', desc: 'Winners & Top Contributors announced', color: 'yellow', icon: '🏆' }
   ]
@@ -108,6 +108,7 @@ export default function Home() {
       <div className="fixed top-0 left-0 right-0 z-40 bg-gray-900/95 backdrop-blur-sm border-b-4 border-cyan-500 px-4 py-3">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
           <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
+            <img src="/vit_logo.png" alt="VIT Pune" className="h-8 sm:h-10 w-auto" />
             <div className="font-pixel text-xs sm:text-sm text-green-400 pixel-text">
               PLAYER_01
             </div>
