@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import ArcadeCabinet from './ArcadeCabinet'
 
 export default function CoinInsert() {
   const [coinInserted, setCoinInserted] = useState(false)
@@ -20,19 +21,20 @@ export default function CoinInsert() {
     return () => window.removeEventListener('keydown', handleKeyPress)
   }, [coinInserted])
 
-  const insertCoin = () => {
-    setAnimatingCoin(true)
+  const handleAnimationComplete = () => {
+    setCoinInserted(true)
+    setAnimatingCoin(false)
     
-    // Play coin drop animation
+    // Show buttons after coin lands
     setTimeout(() => {
-      setCoinInserted(true)
-      setAnimatingCoin(false)
-      
-      // Show buttons after coin lands
-      setTimeout(() => {
-        setShowButtons(true)
-      }, 300)
-    }, 1200)
+      setShowButtons(true)
+    }, 300)
+  }
+
+  const insertCoin = () => {
+    if (animatingCoin || coinInserted) return
+    setAnimatingCoin(true)
+    // Animation completion handled by callback
   }
 
   const handleMentorSignup = () => {
@@ -44,47 +46,49 @@ export default function CoinInsert() {
   }
 
   return (
-    <div className="my-16 relative">
-      {/* Coin Animation */}
-      {animatingCoin && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
-          <div className="text-8xl animate-coin-drop">🪙</div>
-        </div>
-      )}
+    <div className="my-4 w-full flex flex-col items-center justify-center">
+      {/* 3D Arcade Cabinet & Slot */}
+      <div className={`transition-all duration-1000 ${coinInserted ? 'scale-75 opacity-50' : 'scale-100'}`}>
+        <ArcadeCabinet 
+          inserting={animatingCoin} 
+          onAnimationComplete={handleAnimationComplete}
+        />
+      </div>
 
       {/* Press Enter Prompt */}
       {!coinInserted && (
-        <div className="text-center">
-          <div className="font-pixel text-xl md:text-2xl text-yellow-400 animate-blink mb-4 pixel-text">
+        <div className="text-center mt-4">
+          <div className="font-pixel text-xl md:text-2xl text-yellow-400 animate-blink mb-8 pixel-text">
             PRESS ENTER TO INSERT COIN
           </div>
           <button
             onClick={insertCoin}
-            className="px-8 py-4 bg-gradient-to-r from-yellow-600 to-yellow-800 font-pixel text-base rounded-none border-4 border-yellow-400 arcade-btn hover:border-yellow-300 hover:from-yellow-500 hover:to-yellow-700 animate-arcade-pulse"
+            disabled={animatingCoin}
+            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-yellow-600 to-yellow-800 font-pixel text-sm sm:text-base rounded-none border-4 border-yellow-400 arcade-btn hover:border-yellow-300 hover:from-yellow-500 hover:to-yellow-700 animate-arcade-pulse disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            🪙 INSERT COIN
+            {animatingCoin ? 'INSERTING...' : '🪙 INSERT COIN'}
           </button>
         </div>
       )}
 
       {/* Signup Buttons */}
       {coinInserted && (
-        <div className={`text-center ${showButtons ? 'animate-slide-down' : 'opacity-0'}`}>
-          <div className="font-pixel text-2xl md:text-3xl text-cyan-400 mb-8 pixel-text animate-pulse-glow">
+        <div className={`text-center w-full mt-4 sm:mt-8 ${showButtons ? 'animate-slide-down' : 'opacity-0'}`}>
+          <div className="font-pixel text-xl sm:text-3xl text-cyan-400 mb-8 sm:mb-12 pixel-text animate-pulse-glow">
             SELECT PLAYER TYPE
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center items-center px-4">
             {/* Mentor Button */}
             <button
               onClick={handleMentorSignup}
-              className="group relative px-10 py-6 bg-gradient-to-r from-cyan-600 to-cyan-800 font-pixel text-lg rounded-none border-4 border-cyan-400 arcade-btn hover:border-cyan-300 hover:from-cyan-500 hover:to-cyan-700 transition-all duration-300 animate-pixel-pop"
+              className="group relative w-full sm:w-64 px-6 py-6 sm:px-8 sm:py-8 bg-gradient-to-r from-cyan-600 to-cyan-800 font-pixel text-base sm:text-lg rounded-none border-4 border-cyan-400 arcade-btn hover:border-cyan-300 hover:from-cyan-500 hover:to-cyan-700 transition-all duration-300 animate-pixel-pop"
               style={{ animationDelay: '0.1s' }}
             >
-              <div className="flex flex-col items-center gap-2">
-                <div className="text-4xl">👨‍🏫</div>
-                <div className="text-cyan-300">MENTOR</div>
-                <div className="text-xs text-gray-300 font-sans">Guide & Maintain Projects</div>
+              <div className="flex flex-col items-center gap-2 sm:gap-4">
+                <div className="text-4xl sm:text-5xl mb-1 sm:mb-2 group-hover:scale-110 transition-transform">👨‍🏫</div>
+                <div className="text-cyan-300 text-lg sm:text-xl">MENTOR</div>
+                <div className="text-[10px] sm:text-xs text-cyan-100 font-sans opacity-80">Guide & Maintain Projects</div>
               </div>
               
               {/* Hover Effect */}
@@ -94,13 +98,13 @@ export default function CoinInsert() {
             {/* Student Button */}
             <button
               onClick={handleStudentSignup}
-              className="group relative px-10 py-6 bg-gradient-to-r from-magenta-600 to-magenta-800 font-pixel text-lg rounded-none border-4 border-magenta-400 arcade-btn hover:border-magenta-300 hover:from-magenta-500 hover:to-magenta-700 transition-all duration-300 animate-pixel-pop"
+              className="group relative w-full sm:w-64 px-6 py-6 sm:px-8 sm:py-8 bg-gradient-to-r from-magenta-600 to-magenta-800 font-pixel text-base sm:text-lg rounded-none border-4 border-magenta-400 arcade-btn hover:border-magenta-300 hover:from-magenta-500 hover:to-magenta-700 transition-all duration-300 animate-pixel-pop"
               style={{ animationDelay: '0.2s' }}
             >
-              <div className="flex flex-col items-center gap-2">
-                <div className="text-4xl">🎓</div>
-                <div className="text-magenta-300">STUDENT</div>
-                <div className="text-xs text-gray-300 font-sans">Learn & Contribute</div>
+              <div className="flex flex-col items-center gap-2 sm:gap-4">
+                <div className="text-4xl sm:text-5xl mb-1 sm:mb-2 group-hover:scale-110 transition-transform">🎓</div>
+                <div className="text-magenta-300 text-lg sm:text-xl">STUDENT</div>
+                <div className="text-[10px] sm:text-xs text-magenta-100 font-sans opacity-80">Learn & Contribute</div>
               </div>
               
               {/* Hover Effect */}
@@ -109,7 +113,7 @@ export default function CoinInsert() {
           </div>
 
           {/* Hint Text */}
-          <div className="mt-8 font-pixel text-sm text-gray-500">
+          <div className="mt-12 font-pixel text-sm text-gray-500 animate-pulse">
             CHOOSE YOUR PATH TO START THE GAME
           </div>
         </div>

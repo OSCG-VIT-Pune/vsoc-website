@@ -85,16 +85,7 @@ export default function RootLayout({ children }) {
           background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.8) 70%, rgba(0,0,0,0.95) 100%)'
         }}></div>
 
-        {/* Corner Decorations */}
-        <div className="fixed top-4 left-4 z-30 size-8 border-4 border-gray-600 rounded-full"></div>
-        <div className="fixed top-4 right-4 z-30 size-8 border-4 border-gray-600 rounded-full"></div>
-        <div className="fixed bottom-4 left-4 z-30 size-8 border-4 border-gray-600 rounded-full"></div>
-        <div className="fixed bottom-4 right-4 z-30 size-8 border-4 border-gray-600 rounded-full"></div>
-
-        {/* Cabinet Border */}
-        <div className="fixed inset-8 z-20 border-8 border-gray-800 pointer-events-none rounded-lg">
-          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-48 h-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-t-lg"></div>
-        </div>
+        {/* Border removed as requested */}
 
         {children}
 
