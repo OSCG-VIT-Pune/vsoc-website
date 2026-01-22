@@ -1,33 +1,37 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import CoinInsert from '@/components/CoinInsert'
 import StepCard from '@/components/StepCard'
 import ArcadeMapPath from '@/components/ArcadeMapPath'
+import LoadingScreen from '@/components/LoadingScreen'
 
 export default function Home() {
   const [soundOn, setSoundOn] = useState(false)
   const [score, setScore] = useState(25800)
   const [xp, setXp] = useState(650)
   const [gameStarted, setGameStarted] = useState(false)
-
+  const [loading, setLoading] = useState(true)
   const [bossShake, setBossShake] = useState(false)
   const [showCoin, setShowCoin] = useState(false)
   const audioRef = useRef(null)
 
+  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState({ name: 'TEST_USER', role: 'student', contributions: 0 }) // For debugging
+
+  const handleLoadingComplete = useCallback(() => {
+    setLoading(false)
+    window.scrollTo(0, 0)
+  }, [])
+
   const startGame = () => {
     setGameStarted(true)
     setScore(prev => prev + 100)
-    setTimeout(() => {
-      document.getElementById('timeline')?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-      })
-    }, 300)
   }
 
   useEffect(() => {
     if (audioRef.current) {
+// ... existing sound effect logic ...
       if (soundOn) {
         audioRef.current.play().catch(err => {
           console.log('Audio play failed:', err)
@@ -69,8 +73,6 @@ export default function Home() {
     }
   }, [])
 
-
-
   // Timeline Events Data
   const timelineEvents = [
     { date: '14-15 FEB', title: 'Mentor Registration', desc: 'Mentors sign up to lead projects', color: 'cyan', icon: '📝' },
@@ -99,6 +101,7 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden">
+      {loading && <LoadingScreen onComplete={handleLoadingComplete} />}
       <audio 
         ref={audioRef} 
         loop 
@@ -109,21 +112,31 @@ export default function Home() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
           <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
             <img src="/vit_logo.png" alt="VIT Pune" className="h-8 sm:h-10 w-auto" />
-            <div className="font-pixel text-xs sm:text-sm text-green-400 pixel-text">
-              PLAYER_01
-            </div>
-            <div className="flex-1 max-w-[150px] sm:max-w-xs mx-4 sm:mx-0">
-              <div className="flex justify-between text-[10px] sm:text-xs mb-1">
-                <span className="text-cyan-300">XP</span>
-                <span className="text-yellow-300">{xp.toString().padStart(4, '0')}/1000</span>
-              </div>
-              <div className="h-2 sm:h-3 bg-gray-800 rounded-full overflow-hidden border-2 border-gray-700">
-                <div 
-                  className="h-full bg-gradient-to-r from-green-500 via-cyan-500 to-blue-500 rounded-full animate-xp-bar"
-                  style={{ width: `${(xp / 1000) * 100}%` }}
-                ></div>
-              </div>
-            </div>
+            
+            {user && (
+              <>
+                <div className="font-pixel text-xs sm:text-sm text-green-400 pixel-text">
+                  {user.name}
+                </div>
+                <div className="flex-1 max-w-[150px] sm:max-w-xs mx-4 sm:mx-0">
+                  <div className="flex justify-between text-[10px] sm:text-xs mb-1">
+                    <span className="text-cyan-300">
+                      {user.role === 'mentor' ? 'PROJECTS LISTED' : 'CONTRIBUTIONS'}
+                    </span>
+                    <span className="text-yellow-300">
+                      {user.role === 'mentor' ? user.projectsCount : user.contributions}/
+                      {user.role === 'mentor' ? '∞' : '100'}
+                    </span>
+                  </div>
+                  <div className="h-2 sm:h-3 bg-gray-800 rounded-full overflow-hidden border-2 border-gray-700">
+                    <div 
+                      className="h-full bg-gradient-to-r from-green-500 via-cyan-500 to-blue-500 rounded-full animate-xp-bar"
+                      style={{ width: `${user.role === 'mentor' ? 100 : Math.min((user.contributions / 20) * 100, 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
           
           <div className="flex items-center gap-4 sm:gap-8 w-full sm:w-auto justify-end">
