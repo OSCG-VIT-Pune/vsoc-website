@@ -140,12 +140,12 @@ export default function Home() {
           </div>
           
           <div className="flex items-center gap-4 sm:gap-8 w-full sm:w-auto justify-end">
-            <div className="text-right">
-              <div className="text-[10px] sm:text-xs text-gray-400">SCORE</div>
-              <div className="font-pixel text-xl sm:text-2xl text-yellow-400 pixel-text">
-                {score.toString().padStart(6, '0')}
-              </div>
-            </div>
+            <button 
+              className="px-4 py-2 bg-gradient-to-r from-blue-700 to-blue-900 border-2 border-blue-400 rounded arcade-btn hover:border-blue-300 hover:from-blue-600 hover:to-blue-800 font-pixel text-xs sm:text-sm text-blue-100"
+              onClick={() => window.location.href = '/login'}
+            >
+              LOGIN
+            </button>
             
             <button
               onClick={() => setSoundOn(!soundOn)}

@@ -3,35 +3,27 @@
 import React, { useState, useEffect } from 'react'
 
 export default function LoadingScreen({ onComplete }) {
-  const [stage, setStage] = useState('boot') // boot, welcome, done
+  const [stage, setStage] = useState('boot') // boot, done
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    // Stage 1: Booting up (Progress Bar)
-    if (stage === 'boot') {
-      const interval = setInterval(() => {
-        setProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(interval)
-            return 100
-          }
-          return prev + 5
-        })
-      }, 100)
-      return () => clearInterval(interval)
-    }
-  }, [stage])
+    // 1. VISUAL: Trigger progress bar animation
+    const animationTimer = setTimeout(() => {
+      setProgress(100)
+    }, 50)
 
-  // Watch for completion
-  useEffect(() => {
-    if (progress >= 100 && stage === 'boot') {
+    // 2. LOGIC: Force completion after duration + buffer
+    // Duration matches CSS transition (1500ms) + 500ms pause
+    const completionTimer = setTimeout(() => {
       setStage('done')
-      // Slight delay to ensure render cycle completes
-      setTimeout(() => {
-        onComplete()
-      }, 0)
+      setTimeout(onComplete, 0)
+    }, 2000)
+
+    return () => {
+      clearTimeout(animationTimer)
+      clearTimeout(completionTimer)
     }
-  }, [progress, stage, onComplete])
+  }, [onComplete])
 
   if (stage === 'done') return null
 
@@ -43,28 +35,34 @@ export default function LoadingScreen({ onComplete }) {
         backgroundSize: '100% 2px, 3px 100%'
       }}></div>
 
-      {stage === 'boot' && (
-        <div className="w-full max-w-md px-8 text-center">
-          <div className="text-xl sm:text-2xl mb-8 animate-pulse">
-            STARTING ARCADE MACHINE...
-          </div>
-          
-          {/* Retro Loading Bar */}
-          <div className="h-4 border-2 border-green-500 p-1 rounded-none">
-            <div 
-              className="h-full bg-green-500 transition-all duration-100 ease-linear"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-          
-          <div className="mt-4 flex justify-between text-xs sm:text-sm text-green-600 font-mono">
-            <span>MEM CHECK: OK</span>
-            <span>{progress}%</span>
-          </div>
+      <div className="w-full max-w-md px-8 text-center">
+        <div className="text-xl sm:text-2xl mb-8 animate-pulse">
+          STARTING ARCADE MACHINE...
         </div>
-      )}
-
-
+        
+        {/* Retro Loading Bar */}
+        <div className="h-4 border-2 border-green-500 p-1 rounded-none">
+          <div 
+            className="h-full bg-green-500 ease-linear"
+            style={{ 
+              width: `${progress}%`,
+              transition: 'width 1500ms linear'
+            }}
+          ></div>
+        </div>
+        
+        <div className="mt-4 flex justify-between text-xs sm:text-sm text-green-600 font-mono">
+          <span>MEM CHECK: OK</span>
+          {/* We accept that text might jump 0 -> 100 or we can animate it separately if strictly needed, 
+              but for reliability we bind it to the same state. 
+              Since we set state 0->100 directly, this number will jump. 
+              Visual bar animates smoothly via CSS. 
+              To fix text, we can use a pure visual counter or just show 100% when done. 
+              For "Stuck" prevention, simpler is better. Let's just say "LOADING..." or keep it simple.
+              Or, we can perform a separate text animation effect. */}
+          <span>{progress === 100 ? '100%' : 'LOADING...'}</span>
+        </div>
+      </div>
     </div>
   )
 }

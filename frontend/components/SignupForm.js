@@ -58,7 +58,7 @@ export default function SignupForm({ userType = 'student' }) {
     // Common validations
     if (!formData.name.trim()) newErrors.name = 'NAME REQUIRED'
     if (!formData.email.trim()) newErrors.email = 'EMAIL REQUIRED'
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'INVALID EMAIL'
+    else if (!formData.email.endsWith('@vit.edu')) newErrors.email = 'ONLY VIT.EDU ALLOWED'
     if (!formData.phone.trim()) newErrors.phone = 'PHONE REQUIRED'
     if (!formData.github.trim()) newErrors.github = 'GITHUB REQUIRED'
 
@@ -149,7 +149,7 @@ export default function SignupForm({ userType = 'student' }) {
         />
 
         <ArcadeInput
-          label="EMAIL ADDRESS"
+          label="EMAIL ADDRESS (only vit.edu)"
           type="email"
           name="email"
           value={formData.email}
