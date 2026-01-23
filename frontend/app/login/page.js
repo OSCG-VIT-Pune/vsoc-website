@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import ArcadeInput from '@/components/ArcadeInput'
 
 export default function LoginPage() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -35,10 +37,40 @@ export default function LoginPage() {
     }
 
     setIsLoading(true)
+    
     // Simulate API call
     setTimeout(() => {
+      // Check localStorage for simulated backend
+      const storedUserStr = localStorage.getItem(`vsoc_user_${formData.email}`)
+      
+      if (storedUserStr) {
+        const storedUser = JSON.parse(storedUserStr)
+        
+        if (storedUser.password === formData.password) {
+          // Success!
+          setIsLoading(false)
+          
+          if (storedUser.userType === 'mentor') {
+             alert('ACCESS GRANTED: MENTOR')
+             router.push('/mentor-dashboard')
+          } else {
+             alert('ACCESS GRANTED: STUDENT')
+             router.push('/') // Student dashboard not implemented yet, go home
+          }
+          return
+        }
+      }
+      
+      // Verification failed
       setIsLoading(false)
-      alert('Login logic not implemented yet!')
+      setErrors({ email: 'INVALID CREDENTIALS' })
+      // Shake effect
+      const card = document.querySelector('.bg-gray-900')
+      if (card) {
+        card.classList.add('animate-shake')
+        setTimeout(() => card.classList.remove('animate-shake'), 500)
+      }
+      
     }, 1500)
   }
 
