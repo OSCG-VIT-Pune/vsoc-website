@@ -55,7 +55,7 @@ export default function LoginPage() {
              router.push('/mentor-dashboard')
           } else {
              alert('ACCESS GRANTED: STUDENT')
-             router.push('/') // Student dashboard not implemented yet, go home
+             router.push('/student-dashboard') 
           }
           return
         }
