@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import ArcadeInput from './ArcadeInput'
+import ArcadeInput from '../ui/ArcadeInput'
 
 export default function EditProjectModal({ 
   isOpen, 

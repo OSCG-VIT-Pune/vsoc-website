@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import ArcadeInput from './ArcadeInput'
-import SocialButton from './SocialButton'
+import ArcadeInput from '../ui/ArcadeInput'
+import SocialButton from '../ui/SocialButton'
 
 export default function SignupForm({ userType = 'student' }) {
   const router = useRouter()

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import ArcadeInput from './ArcadeInput'
+import ArcadeInput from '../ui/ArcadeInput'
 
 export default function AddProjectForm({ onAddProject }) {
   const [formData, setFormData] = useState({
