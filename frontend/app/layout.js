@@ -14,7 +14,10 @@ const silkscreen = Silkscreen({
   variable: '--font-silkscreen'
 })
 
+import { AuthProvider } from '@/context/AuthContext'
+import { SoundProvider } from '@/context/SoundContext'
 import siteConfig from '@/data/siteConfig'
+import { Footer } from '@/components'
 
 export const metadata = {
   title: {
@@ -81,69 +84,72 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#000000" />
       </head>
       <body className={`${inter.className} bg-black text-white min-h-screen animate-crt-on`}>
-        {/* Starfield Background - FIXED: Use animation property directly */}
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          {starPositions.map((star, i) => (
-            <div
-              key={i}
-              className="absolute size-[2px] bg-white rounded-full"
+        <AuthProvider>
+          <SoundProvider>
+            {/* Starfield Background - FIXED: Use animation property directly */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+              {starPositions.map((star, i) => (
+                <div
+                  key={i}
+                  className="absolute size-[2px] bg-white rounded-full"
+                  style={{
+                    left: star.left,
+                    top: star.top,
+                    animation: `starfield ${star.duration} linear infinite ${star.delay}`,
+                    opacity: star.opacity,
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Grid Background */}
+            <div 
+              className="fixed inset-0 z-0 opacity-10"
               style={{
-                left: star.left,
-                top: star.top,
-                animation: `starfield ${star.duration} linear infinite ${star.delay}`,
-                opacity: star.opacity,
+                backgroundImage: `
+                  linear-gradient(rgba(0, 255, 255, 0.3) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(0, 255, 255, 0.3) 1px, transparent 1px)
+                `,
+                backgroundSize: '30px 30px',
+                animation: 'grid-move 20s linear infinite',
               }}
             />
-          ))}
-        </div>
 
-        {/* Grid Background */}
-        <div 
-          className="fixed inset-0 z-0 opacity-10"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(0, 255, 255, 0.3) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(0, 255, 255, 0.3) 1px, transparent 1px)
-            `,
-            backgroundSize: '30px 30px',
-            animation: 'grid-move 20s linear infinite',
-          }}
-        />
+            {/* CRT Scanlines */}
+            <div className="fixed inset-0 z-10 pointer-events-none crt-effect">
+              <div className="absolute inset-0" style={{
+                backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 255, 0.03) 2px, rgba(0, 255, 255, 0.03) 4px)`,
+                backgroundSize: '100% 4px',
+              }}></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/10 to-transparent" 
+                style={{ animation: 'scanline 8s linear infinite' }}
+              ></div>
+            </div>
 
-        {/* CRT Scanlines */}
-        <div className="fixed inset-0 z-10 pointer-events-none crt-effect">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 255, 0.03) 2px, rgba(0, 255, 255, 0.03) 4px)`,
-            backgroundSize: '100% 4px',
-          }}></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/10 to-transparent" 
-            style={{ animation: 'scanline 8s linear infinite' }}
-          ></div>
-        </div>
+            {/* Vignette Effect */}
+            <div className="fixed inset-0 z-5 pointer-events-none" style={{
+              background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.8) 70%, rgba(0,0,0,0.95) 100%)'
+            }}></div>
 
-        {/* Vignette Effect */}
-        <div className="fixed inset-0 z-5 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.8) 70%, rgba(0,0,0,0.95) 100%)'
-        }}></div>
+            {children}
+            
+            <Footer />
 
-        {/* Border removed as requested */}
-
-        {children}
-
-        {/* Audio Visualizer - FIXED: Use inline animation property */}
-        <div className="fixed bottom-8 left-8 z-50 flex items-end gap-1">
-          {[0, 1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="w-1 bg-gradient-to-t from-cyan-500 to-magenta-500"
-              style={{
-                height: '15px',
-                animation: `pulse-glow 0.8s ease-in-out infinite ${i * 0.1}s`
-              }}
-            ></div>
-          ))}
-        </div>
-
+            {/* Audio Visualizer - FIXED: Use inline animation property */}
+            <div className="fixed bottom-8 left-8 z-50 flex items-end gap-1">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="w-1 bg-gradient-to-t from-cyan-500 to-magenta-500"
+                  style={{
+                    height: '15px',
+                    animation: `pulse-glow 0.8s ease-in-out infinite ${i * 0.1}s`
+                  }}
+                ></div>
+              ))}
+            </div>
+          </SoundProvider>
+        </AuthProvider>
       </body>
     </html>
   )

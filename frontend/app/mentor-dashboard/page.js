@@ -2,10 +2,13 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ProjectCard, AddProjectForm, ConfirmModal, EditProjectModal } from '@/components'
+import Link from 'next/link'
+import { ProjectCard, AddProjectForm, ConfirmModal, EditProjectModal, CompleteProjectModal } from '@/components'
+import { useAuth } from '@/context/AuthContext'
 
 export default function MentorDashboard() {
   const router = useRouter()
+  const { logout } = useAuth()
   // State for projects
   const [projects, setProjects] = useState([
     {
@@ -23,6 +26,12 @@ export default function MentorDashboard() {
 
   // State for editing
   const [editingProject, setEditingProject] = useState(null)
+  
+  // State for completion
+  const [completeModal, setCompleteModal] = useState({
+    isOpen: false,
+    projectId: null
+  })
 
   // State for delete modal
   const [deleteModal, setDeleteModal] = useState({
@@ -85,6 +94,19 @@ export default function MentorDashboard() {
     }
   }
 
+  const handleCompleteClick = (id) => {
+    setCompleteModal({ isOpen: true, projectId: id })
+  }
+
+  const handleConfirmCompletion = (proofData) => {
+    setProjects(prev => prev.map(p => 
+      p.id === completeModal.projectId 
+        ? { ...p, isCompleted: true, isActive: false, ...proofData } 
+        : p
+    ))
+    setCompleteModal({ isOpen: false, projectId: null })
+  }
+
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-black pb-20">
       {/* Background Grid */}
@@ -106,16 +128,27 @@ export default function MentorDashboard() {
         onUpdate={handleUpdateProject}
       />
 
+      <CompleteProjectModal
+        isOpen={completeModal.isOpen}
+        onClose={() => setCompleteModal({ isOpen: false, projectId: null })}
+        onComplete={handleConfirmCompletion}
+      />
+
       {/* HUD */}
       <div className="fixed top-0 left-0 right-0 z-40 bg-gray-900/95 backdrop-blur-sm border-b-4 border-cyan-500 px-4 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <button
-              onClick={() => router.push('/')}
+              onClick={logout}
               className="font-pixel text-sm text-cyan-400 hover:text-cyan-300 transition-colors pixel-text"
             >
               ← LOGOUT
             </button>
+            <Link href="/leaderboard">
+              <button className="hidden sm:block px-4 py-2 border-2 border-yellow-500 bg-yellow-900/30 text-yellow-400 font-pixel text-xs hover:bg-yellow-900/50 hover:scale-105 transition-all">
+                🏆 LEADERBOARD
+              </button>
+            </Link>
           </div>
           
           <div className="flex items-center gap-4">
@@ -174,6 +207,7 @@ export default function MentorDashboard() {
                   onToggle={handleToggle}
                   onEdit={handleEdit}
                   onDelete={handleDeleteClick}
+                  onComplete={handleCompleteClick}
                 />
               ))}
             </div>

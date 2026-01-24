@@ -4,29 +4,15 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArcadeInput } from '@/components'
+import { useAuth } from '@/context/AuthContext'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { login } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
-
-  // Dummy error/loading states for visual feedback
-  const [isLoading, setIsLoading] = useState(false)
-  const [errors, setErrors] = useState({})
-
-  const handleChange = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }))
-    // Clear error when user types
-    if (errors[e.target.name]) {
-      setErrors(prev => ({ ...prev, [e.target.name]: null }))
-    }
-  }
-
   const handleSubmit = (e) => {
     e.preventDefault()
     
@@ -40,17 +26,15 @@ export default function LoginPage() {
     
     // Simulate API call
     setTimeout(() => {
-      // Check localStorage for simulated backend
-      const storedUserStr = localStorage.getItem(`vsoc_user_${formData.email}`)
+      // Use AuthContext to login
+      const user = login(formData.email)
       
-      if (storedUserStr) {
-        const storedUser = JSON.parse(storedUserStr)
-        
-        if (storedUser.password === formData.password) {
+      if (user) {
+        if (user.password === formData.password) {
           // Success!
           setIsLoading(false)
           
-          if (storedUser.userType === 'mentor') {
+          if (user.userType === 'mentor') {
              alert('ACCESS GRANTED: MENTOR')
              router.push('/mentor-dashboard')
           } else {

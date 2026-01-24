@@ -12,12 +12,14 @@ export default function ProjectCard({
   repoLink,
   commsLink,
   isActive = true,
+  isCompleted = false,
   onToggle,
   onEdit,
-  onDelete
+  onDelete,
+  onComplete
 }) {
   return (
-    <div className={`border-4 ${isActive ? 'border-cyan-700' : 'border-gray-700'} bg-gradient-to-br ${isActive ? 'from-gray-900 to-black' : 'from-gray-900 to-gray-800'} p-6 rounded-none relative group transition-all duration-300`}>
+    <div className={`border-4 ${isCompleted ? 'border-yellow-600' : isActive ? 'border-cyan-700' : 'border-gray-700'} bg-gradient-to-br ${isCompleted ? 'from-yellow-900/20 to-black' : isActive ? 'from-gray-900 to-black' : 'from-gray-900 to-gray-800'} p-6 rounded-none relative group transition-all duration-300`}>
       {/* Header with Pixel Art Icon */}
       <div className="flex items-start justify-between mb-4">
         <div>
@@ -32,18 +34,32 @@ export default function ProjectCard({
           <div className="text-xs text-gray-500 font-pixel">REQUIRED PLAYERS</div>
           <div className={`text-lg font-pixel ${isActive ? 'text-yellow-400' : 'text-gray-600'}`}>{studentsRequired}</div>
         </div>
-        <div className="text-right">
+        <div className="text-right flex flex-col items-end gap-2">
            <div className="text-xs text-gray-500 font-pixel">STATUS</div>
-           <button 
-             onClick={() => onToggle(id)}
-             className={`font-pixel text-sm px-3 py-1 border-2 ${
-               isActive 
-                 ? 'text-green-400 border-green-500 hover:bg-green-900/30' 
-                 : 'text-red-400 border-red-500 hover:bg-red-900/30'
-             } transition-all`}
-           >
-             {isActive ? '● ACTIVE' : '○ INACTIVE'}
-           </button>
+           <div className="flex gap-2">
+             {!isCompleted && (
+               <button 
+                 onClick={() => onComplete(id)}
+                 className="font-pixel text-xs px-2 py-1 border-2 border-yellow-500 text-yellow-400 hover:bg-yellow-900/30 transition-all"
+                 title="Mark as Completed"
+               >
+                 ✓ COMPLETE
+               </button>
+             )}
+             <button 
+               onClick={() => onToggle(id)}
+               className={`font-pixel text-sm px-3 py-1 border-2 ${
+                 isCompleted
+                   ? 'text-yellow-400 border-yellow-500 bg-yellow-900/20'
+                   : isActive 
+                     ? 'text-green-400 border-green-500 hover:bg-green-900/30' 
+                     : 'text-red-400 border-red-500 hover:bg-red-900/30'
+               } transition-all`}
+               disabled={isCompleted}
+             >
+               {isCompleted ? '★ COMPLETED' : isActive ? '● ACTIVE' : '○ INACTIVE'}
+             </button>
+           </div>
         </div>
       </div>
 

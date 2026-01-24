@@ -2,22 +2,28 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { CoinInsert, StepCard, ArcadeMapPath, LoadingScreen } from '@/components'
+import { useAuth } from '@/context/AuthContext'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { useSound } from '@/context/SoundContext'
 
 export default function Home() {
-  const [soundOn, setSoundOn] = useState(false)
+  const { user, loading: authLoading } = useAuth()
+  const router = useRouter()
+  const { soundOn, toggleSound } = useSound() 
+  // const [soundOn, setSoundOn] = useState(false) -> Removed local state
+  const [showCoinInsert, setShowCoinInsert] = useState(true)
+
   const [score, setScore] = useState(25800)
   const [xp, setXp] = useState(650)
   const [gameStarted, setGameStarted] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [gameLoading, setGameLoading] = useState(true)
   const [bossShake, setBossShake] = useState(false)
   const [showCoin, setShowCoin] = useState(false)
   const audioRef = useRef(null)
 
-  const [user, setUser] = useState(null)
-  // const [user, setUser] = useState({ name: 'TEST_USER', role: 'student', contributions: 0 }) // For debugging
-
   const handleLoadingComplete = useCallback(() => {
-    setLoading(false)
+    setGameLoading(false)
     window.scrollTo(0, 0)
   }, [])
 
@@ -26,18 +32,18 @@ export default function Home() {
     setScore(prev => prev + 100)
   }
 
+  // Effect hooks must be unconditional too
+  // Audio logic moved to global context
+
   useEffect(() => {
-    if (audioRef.current) {
-// ... existing sound effect logic ...
-      if (soundOn) {
-        audioRef.current.play().catch(err => {
-          console.log('Audio play failed:', err)
-        })
+    if (!authLoading && user) {
+      if (user.userType === 'mentor') {
+        router.push('/mentor-dashboard')
       } else {
-        audioRef.current.pause()
+        router.push('/student-dashboard')
       }
     }
-  }, [soundOn])
+  }, [user, authLoading, router])
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -45,13 +51,13 @@ export default function Home() {
         startGame()
       }
       if (e.key === 'm' || e.key === 'M') {
-        setSoundOn(!soundOn)
+        toggleSound()
       }
     }
 
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [gameStarted, soundOn])
+  }, [gameStarted, toggleSound])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -69,6 +75,9 @@ export default function Home() {
       clearInterval(interval)
     }
   }, [])
+
+  // Prevent flash of content AFTER all hooks have run
+  if (authLoading || user) return <LoadingScreen />
 
   // Timeline Events Data
   const timelineEvents = [
@@ -98,13 +107,7 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden">
-      {loading && <LoadingScreen onComplete={handleLoadingComplete} />}
-      <audio 
-        ref={audioRef} 
-        loop 
-        preload="auto"
-        src="/audio/background-music.mp3"
-      />
+      {gameLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
       <div className="fixed top-0 left-0 right-0 z-40 bg-gray-900/95 backdrop-blur-sm border-b-4 border-cyan-500 px-4 py-3">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
           <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
@@ -137,6 +140,14 @@ export default function Home() {
           </div>
           
           <div className="flex items-center gap-4 sm:gap-8 w-full sm:w-auto justify-end">
+            <Link href="/leaderboard">
+              <button 
+                className="hidden sm:block px-4 py-2 border-2 border-yellow-500 bg-yellow-900/30 text-yellow-400 font-pixel text-xs sm:text-sm hover:bg-yellow-900/50 hover:scale-105 transition-all"
+              >
+                🏆 LEADERBOARD
+              </button>
+            </Link>
+
             <button 
               className="px-4 py-2 bg-gradient-to-r from-blue-700 to-blue-900 border-2 border-blue-400 rounded arcade-btn hover:border-blue-300 hover:from-blue-600 hover:to-blue-800 font-pixel text-xs sm:text-sm text-blue-100"
               onClick={() => window.location.href = '/login'}
@@ -145,7 +156,7 @@ export default function Home() {
             </button>
             
             <button
-              onClick={() => setSoundOn(!soundOn)}
+              onClick={toggleSound}
               className="p-2 sm:p-3 bg-gray-800 border-2 border-cyan-500 rounded-lg arcade-btn hover:border-cyan-400"
               aria-label={soundOn ? 'Mute sound' : 'Unmute sound'}
             >
@@ -282,37 +293,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <footer className="border-t-8 border-gray-800 bg-gradient-to-b from-black to-gray-900 py-12 sm:py-16 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center space-y-6 text-gray-400 mb-12">
-            <div className="text-lg sm:text-2xl font-silkscreen">
-              VISHWAKARMA SUMMER OF CODE
-            </div>
-            <div className="text-base sm:text-xl text-cyan-300">
-              OSCG – Open Source Contributions and GitHub
-            </div>
-            <div className="text-sm sm:text-lg">
-              Vishwakarma Institute of Technology, Pune
-            </div>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-4 sm:gap-8 mb-12">
-            {['🐦', '💬', '📷', '💼', '🎮'].map((icon, idx) => (
-              <button
-                key={idx}
-                className="w-10 h-10 sm:w-14 sm:h-14 border-2 border-gray-700 flex items-center justify-center text-xl sm:text-2xl bg-gray-900/50 hover:bg-cyan-900/30 hover:border-cyan-500 transition-all duration-300"
-              >
-                {icon}
-              </button>
-            ))}
-          </div>
-
-          <div className="text-center text-gray-500 text-sm font-pixel border-t border-gray-800 pt-8">
-            © 2026 VSoC • VISHWAKARMA INSTITUTE OF TECHNOLOGY, PUNE
-          </div>
-        </div>
-      </footer>
     </main>
   )
 }

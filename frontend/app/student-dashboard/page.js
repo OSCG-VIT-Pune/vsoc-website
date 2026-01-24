@@ -2,10 +2,13 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { StudentProfileCard, StudentProjectCard } from '@/components'
+import { useAuth } from '@/context/AuthContext'
 
 export default function StudentDashboard() {
   const router = useRouter()
+  const { logout } = useAuth()
   
   // Mock Data with Mentor Info
   const [projects] = useState([
@@ -65,11 +68,16 @@ export default function StudentDashboard() {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <button
-              onClick={() => router.push('/')}
+              onClick={logout}
               className="font-pixel text-sm text-cyan-400 hover:text-cyan-300 transition-colors pixel-text"
             >
               ← LOGOUT
             </button>
+            <Link href="/leaderboard">
+              <button className="hidden sm:block px-4 py-2 border-2 border-yellow-500 bg-yellow-900/30 text-yellow-400 font-pixel text-xs hover:bg-yellow-900/50 hover:scale-105 transition-all">
+                🏆 LEADERBOARD
+              </button>
+            </Link>
             <a 
                href="https://chat.whatsapp.com/vsoc-general" 
                target="_blank"

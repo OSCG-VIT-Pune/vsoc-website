@@ -1,5 +1,8 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+import { useSound } from '@/context/SoundContext'
 /**
  * HUD Component
  * Heads-Up Display component showing player stats and controls
@@ -16,14 +19,21 @@ export default function HUD({
   playerName = 'PLAYER_01', 
   xp = 0, 
   maxXp = 1000,
-  score = 0, 
-  soundOn = true, 
-  onSoundToggle 
+  score = 0
 }) {
+  const { soundOn, toggleSound } = useSound()
+
   return (
     <div className="fixed top-0 left-0 right-0 z-40 bg-gray-900/95 backdrop-blur-sm border-b-4 border-cyan-500 px-4 py-3">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-6">
+          <div className="relative w-10 h-10">
+            <img 
+              src="/oscg_logo.png" 
+              alt="OSCG Logo" 
+              className="w-full h-full object-contain pixelated"
+            />
+          </div>
           <div className="font-pixel text-sm text-green-400 pixel-text">
             {playerName}
           </div>
@@ -51,8 +61,15 @@ export default function HUD({
             </div>
           </div>
           
+
+          <Link href="/leaderboard" className="hidden sm:block mr-4">
+            <button className="px-4 py-2 border-2 border-yellow-500 bg-yellow-900/30 text-yellow-400 font-pixel text-xs hover:bg-yellow-900/50 hover:scale-105 transition-all">
+              🏆 LEADERBOARD
+            </button>
+          </Link>
+
           <button
-            onClick={onSoundToggle}
+            onClick={toggleSound}
             className="p-3 bg-gray-800 border-2 border-cyan-500 rounded-lg arcade-btn hover:border-cyan-400"
             aria-label={soundOn ? 'Mute sound' : 'Unmute sound'}
           >

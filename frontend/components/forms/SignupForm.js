@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import ArcadeInput from '../ui/ArcadeInput'
 import SocialButton from '../ui/SocialButton'
+import { useAuth } from '@/context/AuthContext'
 
 export default function SignupForm({ userType = 'student' }) {
   const router = useRouter()
+  const { loginUserDirectly } = useAuth()
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
     name: '',
@@ -100,14 +102,18 @@ export default function SignupForm({ userType = 'student' }) {
       // key: vsoc_user_email@vit.edu
       localStorage.setItem(`vsoc_user_${formData.email}`, JSON.stringify(userData))
       
+      // Auto-login
+      loginUserDirectly(userData)
+      
       console.log('Form submitted:', formData)
       setSubmitted(true)
       
       // Simulate submission & redirect
       setTimeout(() => {
-        alert('🎮 REGISTRATION COMPLETE! REDIRECTING TO LOGIN...')
-        router.push('/login') 
-      }, 1000)
+        const path = userType === 'mentor' ? '/mentor-dashboard' : '/student-dashboard'
+        alert(`🎮 REGISTRATION COMPLETE! ACCESS GRANTED TO ${userType.toUpperCase()} DASHBOARD`)
+        router.push(path) 
+      }, 1500)
     }
   }
 
