@@ -1,14 +1,29 @@
-// Export all reusable arcade-style components
-export { default as LevelCard } from './LevelCard'
-export { default as PowerUpCard } from './PowerUpCard'
-export { default as StepCard } from './StepCard'
-export { default as ArcadeButton } from './ArcadeButton'
-export { default as HUD } from './HUD'
-export { default as SocialButton } from './SocialButton'
-export { default as CoinAnimation } from './CoinAnimation'
-export { default as BossCard } from './BossCard'
-export { default as SectionTitle } from './SectionTitle'
-export { default as CoinInsert } from './CoinInsert'
-export { default as ArcadeInput } from './ArcadeInput'
-export { default as ArcadeCabinet } from './ArcadeCabinet'
-export { default as SignupForm } from './SignupForm'
+// UI Components
+export { default as ArcadeButton } from './ui/ArcadeButton'
+export { default as ArcadeInput } from './ui/ArcadeInput'
+export { default as SectionTitle } from './ui/SectionTitle'
+export { default as SocialButton } from './ui/SocialButton'
+export { default as ConfirmModal } from './ui/ConfirmModal'
+export { default as LoadingScreen } from './ui/LoadingScreen'
+
+// Card Components
+export { default as LevelCard } from './cards/LevelCard'
+export { default as PowerUpCard } from './cards/PowerUpCard'
+export { default as StepCard } from './cards/StepCard'
+export { default as BossCard } from './cards/BossCard'
+export { default as ProjectCard } from './cards/ProjectCard'
+export { default as StudentProfileCard } from './cards/StudentProfileCard'
+export { default as StudentProjectCard } from './cards/StudentProjectCard'
+
+// Form Components
+export { default as SignupForm } from './forms/SignupForm'
+export { default as AddProjectForm } from './forms/AddProjectForm'
+export { default as EditProjectModal } from './forms/EditProjectModal'
+
+// Game Components
+export { default as HUD } from './game/HUD'
+export { default as CoinAnimation } from './game/CoinAnimation'
+export { default as CoinInsert } from './game/CoinInsert'
+export { default as ArcadeCabinet } from './game/ArcadeCabinet'
+export { default as ArcadeMapPath } from './game/ArcadeMapPath'
+export { default as ThreeDCoinScene } from './game/ThreeDCoinScene'

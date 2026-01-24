@@ -2,8 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import StudentProfileCard from '@/components/StudentProfileCard'
-import StudentProjectCard from '@/components/StudentProjectCard'
+import { StudentProfileCard, StudentProjectCard } from '@/components'
 
 export default function StudentDashboard() {
   const router = useRouter()

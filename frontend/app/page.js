@@ -1,10 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import CoinInsert from '@/components/CoinInsert'
-import StepCard from '@/components/StepCard'
-import ArcadeMapPath from '@/components/ArcadeMapPath'
-import LoadingScreen from '@/components/LoadingScreen'
+import { CoinInsert, StepCard, ArcadeMapPath, LoadingScreen } from '@/components'
 
 export default function Home() {
   const [soundOn, setSoundOn] = useState(false)

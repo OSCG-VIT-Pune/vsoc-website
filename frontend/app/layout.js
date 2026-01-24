@@ -14,9 +14,50 @@ const silkscreen = Silkscreen({
   variable: '--font-silkscreen'
 })
 
+import siteConfig from '@/data/siteConfig'
+
 export const metadata = {
-  title: 'VSoC | Vishwakarma Summer of Code',
-  description: 'Join the ultimate open source coding challenge and showcase your skills!',
+  title: {
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.title}`,
+  },
+  description: siteConfig.description,
+  keywords: [...siteConfig.features, 'Hackathon', 'Open Source', 'Coding', 'VIT', 'Student'],
+  authors: [{ name: siteConfig.author }],
+  creator: siteConfig.author,
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://vsoc.oscg.in',
+    title: siteConfig.title,
+    description: siteConfig.description,
+    siteName: siteConfig.title,
+    images: [
+      {
+        url: '/og-image.png', // We don't have this yet but good to have the field
+        width: 1200,
+        height: 630,
+        alt: siteConfig.title,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteConfig.title,
+    description: siteConfig.description,
+    creator: '@VIT_OSCG',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 const starPositions = [

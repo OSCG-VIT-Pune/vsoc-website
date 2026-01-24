@@ -2,10 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import ProjectCard from '@/components/ProjectCard'
-import AddProjectForm from '@/components/AddProjectForm'
-import ConfirmModal from '@/components/ConfirmModal'
-import EditProjectModal from '@/components/EditProjectModal'
+import { ProjectCard, AddProjectForm, ConfirmModal, EditProjectModal } from '@/components'
 
 export default function MentorDashboard() {
   const router = useRouter()
