@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { CoinInsert, StepCard, ArcadeMapPath, LoadingScreen } from '@/components'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
@@ -11,16 +11,12 @@ export default function Home() {
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const { soundOn, toggleSound } = useSound() 
-  // const [soundOn, setSoundOn] = useState(false) -> Removed local state
-  const [showCoinInsert, setShowCoinInsert] = useState(true)
-
+  
   const [score, setScore] = useState(25800)
   const [xp, setXp] = useState(650)
   const [gameStarted, setGameStarted] = useState(false)
   const [gameLoading, setGameLoading] = useState(true)
   const [bossShake, setBossShake] = useState(false)
-  const [showCoin, setShowCoin] = useState(false)
-  const audioRef = useRef(null)
 
   const handleLoadingComplete = useCallback(() => {
     setGameLoading(false)

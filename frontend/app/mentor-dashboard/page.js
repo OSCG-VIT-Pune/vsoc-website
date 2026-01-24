@@ -1,13 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ProjectCard, AddProjectForm, ConfirmModal, EditProjectModal, CompleteProjectModal } from '@/components'
 import { useAuth } from '@/context/AuthContext'
 
 export default function MentorDashboard() {
-  const router = useRouter()
   const { logout } = useAuth()
   // State for projects
   const [projects, setProjects] = useState([

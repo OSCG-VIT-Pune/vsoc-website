@@ -1,13 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { StudentProfileCard, StudentProjectCard } from '@/components'
 import { useAuth } from '@/context/AuthContext'
 
 export default function StudentDashboard() {
-  const router = useRouter()
   const { logout } = useAuth()
   
   // Mock Data with Mentor Info
