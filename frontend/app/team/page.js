@@ -30,7 +30,7 @@ export default function TeamPage() {
     { 
       name: 'Sharayu Itkikar', 
       role: 'Treasurer', 
-      department: 'Design',
+      department: 'CSE-DS',
       bio: 'tracking budgets, managing sponsorships and believing open-source makes tech better for everyone!',
       image: '/brains/sharayu.jpeg'
     }
