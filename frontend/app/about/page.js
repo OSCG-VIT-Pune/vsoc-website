@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { SectionTitle, ArcadeButton, HUD } from '@/components'
+import { SectionTitle, ArcadeButton } from '@/components'
 import { useRouter } from 'next/navigation'
 
 export default function AboutPage() {
@@ -9,7 +9,6 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen pt-24 px-4 pb-24">
-      <HUD />
       <SectionTitle title="ABOUT OSCG" />
       
       <div className="max-w-4xl mx-auto mt-8 bg-black/80 border-4 border-gray-700 p-8 rounded-lg backdrop-blur">

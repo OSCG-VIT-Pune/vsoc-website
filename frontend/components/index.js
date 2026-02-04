@@ -6,6 +6,11 @@ export { default as SocialButton } from './ui/SocialButton'
 export { default as ConfirmModal } from './ui/ConfirmModal'
 export { default as LoadingScreen } from './ui/LoadingScreen'
 export { default as Footer } from './ui/Footer'
+export { default as BackToTop } from './ui/BackToTop'
+export { default as AudioControl } from './ui/AudioControl'
+
+// Layout Components
+export { default as Navbar } from './layout/Navbar'
 
 // Card Components
 export { default as LevelCard } from './cards/LevelCard'
@@ -21,6 +26,8 @@ export { default as SignupForm } from './forms/SignupForm'
 export { default as AddProjectForm } from './forms/AddProjectForm'
 export { default as EditProjectModal } from './forms/EditProjectModal'
 export { default as CompleteProjectModal } from './forms/CompleteProjectModal'
+export { default as StudentSettingsModal } from './forms/StudentSettingsModal'
+export { default as MentorSettingsModal } from './forms/MentorSettingsModal'
 
 // Game Components
 export { default as HUD } from './game/HUD'

@@ -8,7 +8,8 @@ import React from 'react'
  */
 export default function ArcadeCabinet({ 
   inserting = false,
-  onAnimationComplete = () => {}
+  onAnimationComplete = () => {},
+  onClick = () => {}
 }) {
   return (
     <div className="relative w-full h-80 flex items-center justify-center perspective-1000 overflow-visible">
@@ -25,12 +26,17 @@ export default function ArcadeCabinet({
             </div>
           ))}
           
-          {/* Neon Sign */}
-          <div className="absolute top-6 bg-red-900/50 px-4 py-2 rounded border border-red-500 shadow-[0_0_15px_rgba(255,0,0,0.5)]">
-            <span className="text-xs sm:text-sm font-bold text-red-100 tracking-[0.2em] font-pixel shadow-red-glow animate-pulse">
+          {/* Neon Sign / Red Button */}
+          <button 
+            onClick={onClick}
+            disabled={inserting}
+            className="absolute top-6 bg-red-900/80 px-4 py-2 rounded border-2 border-red-500 shadow-[0_0_15px_rgba(255,0,0,0.5)] transition-all hover:bg-red-800 hover:scale-105 active:scale-95 hover:shadow-[0_0_25px_rgba(255,0,0,0.8)] cursor-pointer group z-20"
+            aria-label="Insert Coin"
+          >
+            <span className="text-xs sm:text-sm font-bold text-red-100 tracking-[0.2em] font-pixel shadow-red-glow animate-pulse group-hover:text-white">
               INSERT COIN
             </span>
-          </div>
+          </button>
         </div>
 
         {/* Slot Housing (Protruding 3D Box) */}

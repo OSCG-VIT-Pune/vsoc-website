@@ -61,43 +61,6 @@ export default function StudentDashboard() {
       {/* Background Grid */}
       <div className="fixed inset-0 grid-bg opacity-20 pointer-events-none"></div>
 
-      {/* HUD Header */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-gray-900/95 backdrop-blur-sm border-b-4 border-cyan-500 px-4 py-3">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <button
-              onClick={logout}
-              className="font-pixel text-sm text-cyan-400 hover:text-cyan-300 transition-colors pixel-text"
-            >
-              ← LOGOUT
-            </button>
-            <Link href="/leaderboard">
-              <button className="hidden sm:block px-4 py-2 border-2 border-yellow-500 bg-yellow-900/30 text-yellow-400 font-pixel text-xs hover:bg-yellow-900/50 hover:scale-105 transition-all">
-                🏆 LEADERBOARD
-              </button>
-            </Link>
-            <a 
-               href="https://chat.whatsapp.com/vsoc-general" 
-               target="_blank"
-               rel="noopener noreferrer"
-               className="hidden md:flex items-center gap-2 bg-green-900/50 border border-green-500 px-3 py-1 font-pixel text-xs text-green-400 hover:bg-green-900 hover:text-green-300 transition-all animate-pulse-glow"
-            >
-               <span>💬</span> VSOC HQ CHANNEL
-            </a>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <div className="text-4xl animate-float">👨‍🚀</div>
-            <div className="text-right">
-              <div className="text-xs text-gray-400">CADET</div>
-              <div className="font-pixel text-xl text-cyan-400 pixel-text">
-                STUDENT DASHBOARD
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 pt-32 grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* Left Column: Student Profile & Stats */}

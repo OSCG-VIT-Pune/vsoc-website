@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { CoinInsert, StepCard, ArcadeMapPath, LoadingScreen } from '@/components'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation'
@@ -11,6 +11,23 @@ export default function Home() {
   const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const { soundOn, toggleSound } = useSound() 
+  const coinInsertRef = useRef(null)
+
+  const handleJoinChallenge = () => {
+    console.log('handleJoinChallenge triggered')
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    
+    // Trigger coin insertion
+    setTimeout(() => {
+      console.log('Timeout fired, checking ref:', coinInsertRef.current)
+      if (coinInsertRef.current) {
+        coinInsertRef.current.insertCoin()
+      } else {
+        console.error('Ref is null!')
+      }
+    }, 1000) // Increased delay to ensure visibility
+  }
   
   const [score, setScore] = useState(25800)
   const [xp, setXp] = useState(650)
@@ -18,8 +35,23 @@ export default function Home() {
   const [gameLoading, setGameLoading] = useState(true)
   const [bossShake, setBossShake] = useState(false)
 
+  useEffect(() => {
+    // Force scroll to top on mount/refresh
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
+    }
+    window.scrollTo(0, 0)
+
+    // Check if we've already shown the loading screen this session
+    const hasLoaded = sessionStorage.getItem('vsoc_loaded')
+    if (hasLoaded) {
+      setGameLoading(false)
+    }
+  }, [])
+
   const handleLoadingComplete = useCallback(() => {
     setGameLoading(false)
+    sessionStorage.setItem('vsoc_loaded', 'true')
     window.scrollTo(0, 0)
   }, [])
 
@@ -104,79 +136,17 @@ export default function Home() {
   return (
     <main className="relative min-h-screen overflow-x-hidden">
       {gameLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-gray-900/95 backdrop-blur-sm border-b-4 border-cyan-500 px-4 py-3">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
-          <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
-            <img src="/vit_logo.png" alt="VIT Pune" className="h-8 sm:h-10 w-auto" />
-            
-            {user && (
-              <>
-                <div className="font-pixel text-xs sm:text-sm text-green-400 pixel-text">
-                  {user.name}
-                </div>
-                <div className="flex-1 max-w-[150px] sm:max-w-xs mx-4 sm:mx-0">
-                  <div className="flex justify-between text-[10px] sm:text-xs mb-1">
-                    <span className="text-cyan-300">
-                      {user.role === 'mentor' ? 'PROJECTS LISTED' : 'CONTRIBUTIONS'}
-                    </span>
-                    <span className="text-yellow-300">
-                      {user.role === 'mentor' ? user.projectsCount : user.contributions}/
-                      {user.role === 'mentor' ? '∞' : '100'}
-                    </span>
-                  </div>
-                  <div className="h-2 sm:h-3 bg-gray-800 rounded-full overflow-hidden border-2 border-gray-700">
-                    <div 
-                      className="h-full bg-gradient-to-r from-green-500 via-cyan-500 to-blue-500 rounded-full animate-xp-bar"
-                      style={{ width: `${user.role === 'mentor' ? 100 : Math.min((user.contributions / 20) * 100, 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-          
-          <div className="flex items-center gap-4 sm:gap-8 w-full sm:w-auto justify-end">
-            <Link href="/leaderboard">
-              <button 
-                className="hidden sm:block px-4 py-2 border-2 border-yellow-500 bg-yellow-900/30 text-yellow-400 font-pixel text-xs sm:text-sm hover:bg-yellow-900/50 hover:scale-105 transition-all"
-              >
-                🏆 LEADERBOARD
-              </button>
-            </Link>
-
-            <button 
-              className="px-4 py-2 bg-gradient-to-r from-blue-700 to-blue-900 border-2 border-blue-400 rounded arcade-btn hover:border-blue-300 hover:from-blue-600 hover:to-blue-800 font-pixel text-xs sm:text-sm text-blue-100"
-              onClick={() => window.location.href = '/login'}
-            >
-              LOGIN
-            </button>
-            
-            <button
-              onClick={toggleSound}
-              className="p-2 sm:p-3 bg-gray-800 border-2 border-cyan-500 rounded-lg arcade-btn hover:border-cyan-400"
-              aria-label={soundOn ? 'Mute sound' : 'Unmute sound'}
-            >
-              {soundOn ? (
-                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                </svg>
-              ) : (
-                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-                </svg>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
 
       <section className="min-h-screen flex items-center justify-center px-4 pt-40 pb-20 sm:pt-32 sm:pb-0">
         <div className="relative z-10 text-center max-w-4xl mx-auto w-full">
-          <h1 className="font-pixel text-5xl sm:text-6xl md:text-8xl lg:text-9xl mb-4 animate-pulse-glow leading-none sm:leading-normal whitespace-nowrap">
+          <h1 className="font-pixel text-4xl sm:text-6xl md:text-8xl lg:text-9xl mb-4 animate-pulse-glow leading-none sm:leading-normal whitespace-nowrap">
             <span className="text-cyan-400 pixel-text">V</span>
             <span className="text-magenta-400 pixel-text">S</span>
             <span className="text-green-400 pixel-text">o</span>
             <span className="text-yellow-400 pixel-text">C</span>
+            <span className="text-white-400 pixel-text">`</span>
+            <span className="text-red-400 pixel-text">2</span>
+            <span className="text-blue-400 pixel-text">6</span>
           </h1>
           
           <h2 className="font-silkscreen text-sm sm:text-xl md:text-2xl mb-8 text-gray-300 px-2">
@@ -187,11 +157,7 @@ export default function Home() {
           </h2>
 
           <div className="w-full flex justify-center scale-75 sm:scale-100 origin-center">
-            <CoinInsert />
-          </div>
-
-          <div className="mt-8 font-pixel text-base sm:text-2xl text-gray-500 px-4">
-            INSERT COIN → START OPEN SOURCE
+            <CoinInsert ref={coinInsertRef} />
           </div>
         </div>
       </section>
@@ -202,6 +168,9 @@ export default function Home() {
         </h2>
 
         <div className="relative ml-4 md:ml-1/2 md:-translate-x-0.5 space-y-12 md:space-y-16">
+          {/* Vertical Timeline Line */}
+          <div className="absolute top-0 bottom-0 w-1 bg-cyan-800 left-[-4px] md:left-1/2 md:-ml-1 -z-10"></div>
+
           {timelineEvents.map((event, idx) => (
             <div key={idx} className={`relative flex flex-col md:flex-row items-center ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''} group`}>
               
@@ -281,7 +250,7 @@ export default function Home() {
               </p>
               <button 
                 className="w-full sm:w-auto px-6 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-red-700 to-red-900 font-pixel text-sm sm:text-lg rounded-none border-4 border-red-500 arcade-btn hover:border-red-400 hover:from-red-600 hover:to-red-800"
-                onClick={() => setBossShake(true)}
+                onClick={handleJoinChallenge}
               >
                 ⚔️ JOIN THE CHALLENGE
               </button>

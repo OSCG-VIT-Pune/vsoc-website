@@ -44,9 +44,14 @@ export default function ArcadeMapPath({ steps }) {
       </div>
 
       {/* Desktop Horizontal Wavy Path */}
-      <div className="hidden md:block relative h-96">
+      <div className="hidden md:block relative h-96 w-full">
         {/* SVG Path */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" overflow="visible">
+        <svg 
+          className="absolute inset-0 w-full h-full pointer-events-none z-0" 
+          overflow="visible"
+          viewBox="0 0 1000 300"
+          preserveAspectRatio="none"
+        >
           <defs>
             <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#064e3b" />

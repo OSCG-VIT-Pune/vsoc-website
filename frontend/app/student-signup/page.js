@@ -8,29 +8,7 @@ export default function StudentSignup() {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden">
-      {/* HUD */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-gray-900/95 backdrop-blur-sm border-b-4 border-magenta-500 px-4 py-3">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <button
-              onClick={() => router.push('/')}
-              className="font-pixel text-sm text-magenta-400 hover:text-magenta-300 transition-colors pixel-text"
-            >
-              ← BACK TO HOME
-            </button>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <div className="text-4xl animate-float">🎓</div>
-            <div className="text-right">
-              <div className="text-xs text-gray-400">PLAYER TYPE</div>
-              <div className="font-pixel text-xl text-magenta-400 pixel-text">
-                STUDENT
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* HUD Removed in favor of global Navbar */}
 
       {/* Main Content */}
       <section className="min-h-screen flex items-center justify-center px-4 pt-32 pb-20">

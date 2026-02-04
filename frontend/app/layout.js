@@ -16,6 +16,7 @@ const silkscreen = Silkscreen({
 
 import { AuthProvider } from '@/context/AuthContext'
 import { SoundProvider } from '@/context/SoundContext'
+import { Navbar, BackToTop, AudioControl } from '@/components'
 import siteConfig from '@/data/siteConfig'
 import { Footer } from '@/components'
 
@@ -126,28 +127,21 @@ export default function RootLayout({ children }) {
               ></div>
             </div>
 
-            {/* Vignette Effect */}
+            {/* Vignette Effect - Reduced opacity for brighter look */}
             <div className="fixed inset-0 z-5 pointer-events-none" style={{
-              background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.8) 70%, rgba(0,0,0,0.95) 100%)'
+              background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.4) 80%, rgba(0,0,0,0.6) 100%)'
             }}></div>
+            
+            {/* Global Navbar */}
+            <Navbar />
 
             {children}
             
             <Footer />
 
-            {/* Audio Visualizer - FIXED: Use inline animation property */}
-            <div className="fixed bottom-8 left-8 z-50 flex items-end gap-1">
-              {[0, 1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className="w-1 bg-gradient-to-t from-cyan-500 to-magenta-500"
-                  style={{
-                    height: '15px',
-                    animation: `pulse-glow 0.8s ease-in-out infinite ${i * 0.1}s`
-                  }}
-                ></div>
-              ))}
-            </div>
+            {/* Global Audio Control & Back To Top */}
+            <AudioControl />
+            <BackToTop />
           </SoundProvider>
         </AuthProvider>
       </body>

@@ -1,14 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { useRouter } from 'next/navigation'
 import ArcadeCabinet from './ArcadeCabinet'
 
-export default function CoinInsert() {
+const CoinInsert = forwardRef((props, ref) => {
   const [coinInserted, setCoinInserted] = useState(false)
   const [showButtons, setShowButtons] = useState(false)
   const [animatingCoin, setAnimatingCoin] = useState(false)
   const router = useRouter()
+
+  useImperativeHandle(ref, () => ({
+    insertCoin: () => {
+      console.log('CoinInsert: Imperative handle called')
+      insertCoin()
+    }
+  }))
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -22,6 +29,7 @@ export default function CoinInsert() {
   }, [coinInserted])
 
   const handleAnimationComplete = () => {
+    console.log('Animation complete triggered')
     setCoinInserted(true)
     setAnimatingCoin(false)
     
@@ -32,6 +40,7 @@ export default function CoinInsert() {
   }
 
   const insertCoin = () => {
+    console.log('insertCoin internal triggered', { animatingCoin, coinInserted })
     if (animatingCoin || coinInserted) return
     setAnimatingCoin(true)
     // Animation completion handled by callback
@@ -52,22 +61,16 @@ export default function CoinInsert() {
         <ArcadeCabinet 
           inserting={animatingCoin} 
           onAnimationComplete={handleAnimationComplete}
+          onClick={insertCoin}
         />
       </div>
 
       {/* Press Enter Prompt */}
       {!coinInserted && (
-        <div className="text-center mt-4">
-          <div className="font-pixel text-xl md:text-2xl text-yellow-400 animate-blink mb-8 pixel-text">
-            PRESS ENTER TO INSERT COIN
+        <div className="text-center mt-8 cursor-default">
+          <div className="font-pixel text-lg md:text-xl text-yellow-400/80 animate-blink pixel-text">
+            PRESS ENTER TO START
           </div>
-          <button
-            onClick={insertCoin}
-            disabled={animatingCoin}
-            className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-yellow-600 to-yellow-800 font-pixel text-sm sm:text-base rounded-none border-4 border-yellow-400 arcade-btn hover:border-yellow-300 hover:from-yellow-500 hover:to-yellow-700 animate-arcade-pulse disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {animatingCoin ? 'INSERTING...' : '🪙 INSERT COIN'}
-          </button>
         </div>
       )}
 
@@ -120,4 +123,8 @@ export default function CoinInsert() {
       )}
     </div>
   )
-}
+})
+
+CoinInsert.displayName = 'CoinInsert'
+
+export default CoinInsert

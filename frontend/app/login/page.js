@@ -74,17 +74,8 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background Grid Animation */}
-      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" 
-           style={{
-             backgroundImage: 'linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px)',
-             backgroundSize: '40px 40px',
-             backgroundPosition: 'center'
-           }}>
-      </div>
-      
       {/* Login Card */}
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-50 w-full max-w-md">
         {/* CRT Frame Effect */}
         <div className="bg-gray-900 border-4 border-cyan-600 p-8 shadow-[0_0_50px_rgba(6,182,212,0.3)] relative group">
           
@@ -95,9 +86,7 @@ export default function LoginPage() {
           <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-4 border-r-4 border-cyan-400"></div>
 
           <div className="text-center mb-10">
-            <Link href="/" className="inline-block mb-6 text-xs font-pixel text-gray-500 hover:text-cyan-400 transition-colors">
-              ← BACK TO ARCADE
-            </Link>
+            <div className="mb-6"></div>
             <h1 className="font-pixel text-4xl text-white mb-2 pixel-text animate-pulse-glow">
               PLAYER LOGIN
             </h1>
@@ -155,11 +144,41 @@ export default function LoginPage() {
           </button>
         </div>
         
+        {/* Sign Up Options */}
+        <div className="mt-8 pt-6 border-t border-gray-800">
+           <p className="text-center font-pixel text-xs text-gray-500 mb-4 uppercase tracking-widest">
+             NEW PLAYER? INITIALIZE PROFILE:
+           </p>
+           <div className="grid grid-cols-2 gap-4">
+             <Link href="/student-signup">
+               <button className="w-full py-2 bg-transparent border border-cyan-700 text-cyan-500 font-pixel text-[10px] hover:bg-cyan-900/20 hover:text-cyan-300 transition-colors">
+                 STUDENT SIGNUP
+               </button>
+             </Link>
+             <Link href="/mentor-signup">
+               <button className="w-full py-2 bg-transparent border border-yellow-700 text-yellow-500 font-pixel text-[10px] hover:bg-yellow-900/20 hover:text-yellow-300 transition-colors">
+                 MENTOR SIGNUP
+               </button>
+             </Link>
+           </div>
+        </div>
+
         {/* Footer Text */}
         <div className="text-center mt-6 text-gray-500 text-xs font-pixel">
           VSoC 2026 • INSERT CREDENTIALS TO PLAY
         </div>
       </div>
+      
+      {/* Return to Base (Home) */}
+      <div className="absolute top-8 left-8 z-50">
+        <Link href="/">
+          <button className="flex items-center gap-2 text-gray-500 hover:text-white font-pixel text-xs transition-colors group">
+            <span className="group-hover:-translate-x-1 transition-transform">◄</span> 
+            RETURN TO BASE
+          </button>
+        </Link>
+      </div>
+
     </main>
   )
 }

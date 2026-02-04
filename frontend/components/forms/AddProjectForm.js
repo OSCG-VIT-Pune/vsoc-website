@@ -3,13 +3,12 @@
 import { useState } from 'react'
 import ArcadeInput from '../ui/ArcadeInput'
 
-export default function AddProjectForm({ onAddProject }) {
+export default function AddProjectForm({ onAddProject, variant = 'arcade' }) {
+  const isProfessional = variant === 'professional'
+
   const [formData, setFormData] = useState({
     title: '',
-    domain: '',
-    studentsRequired: '',
-    problemStatement: '',
-    expectedSolution: '',
+    description: '',
     repoLink: '',
     commsLink: ''
   })
@@ -25,10 +24,7 @@ export default function AddProjectForm({ onAddProject }) {
   const validate = () => {
     const newErrors = {}
     if (!formData.title.trim()) newErrors.title = 'TITLE REQUIRED'
-    if (!formData.domain.trim()) newErrors.domain = 'DOMAIN REQUIRED'
-    if (!formData.studentsRequired.trim()) newErrors.studentsRequired = 'COUNT REQUIRED'
-    if (!formData.problemStatement.trim()) newErrors.problemStatement = 'PROBLEM REQUIRED'
-    if (!formData.expectedSolution.trim()) newErrors.expectedSolution = 'SOLUTION REQUIRED'
+    if (!formData.description.trim()) newErrors.description = 'DESCRIPTION REQUIRED'
     if (!formData.repoLink.trim()) newErrors.repoLink = 'REPO LINK REQUIRED'
     if (!formData.commsLink.trim()) newErrors.commsLink = 'COMMS LINK REQUIRED'
     
@@ -43,25 +39,49 @@ export default function AddProjectForm({ onAddProject }) {
       // Reset form
       setFormData({
         title: '',
-        domain: '',
-        studentsRequired: '',
-        problemStatement: '',
-        expectedSolution: '',
+        description: '',
         repoLink: '',
         commsLink: ''
       })
-      alert('NEW CARTRIDGE LOADED! (Project Added)')
+      alert('SUCCESS: PROJECT INITIALIZED')
     }
   }
 
+  const containerClass = isProfessional
+    ? "bg-gray-900/60 backdrop-blur-md border border-white/10 p-8 rounded-xl shadow-2xl relative overflow-hidden"
+    : "border-4 border-magenta-800 bg-gradient-to-br from-gray-900 to-black p-8 rounded-none"
+
+  const labelClass = isProfessional
+    ? "block text-xs font-bold text-gray-400 mb-2 font-sans tracking-wide"
+    : "block font-pixel text-sm text-cyan-400 mb-2 pixel-text"
+
+  const textareaClass = isProfessional
+    ? "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-cyan-500/50 focus:bg-white/10 outline-none transition-all h-32 text-sm font-sans placeholder-gray-500"
+    : "w-full px-4 py-3 bg-gray-900 border-4 border-cyan-700 rounded-none text-white focus:border-cyan-400 focus:shadow-lg focus:shadow-cyan-500/50 outline-none transition-all h-32"
+
+  const buttonClass = isProfessional
+    ? "w-full py-3 mt-4 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-lg text-white font-bold text-sm tracking-widest hover:from-cyan-500 hover:to-blue-500 shadow-lg shadow-cyan-900/20 transition-all transform hover:-translate-y-0.5"
+    : "w-full py-4 mt-4 bg-gradient-to-r from-magenta-700 to-magenta-900 border-4 border-magenta-500 text-white font-pixel text-lg hover:from-magenta-600 hover:to-magenta-800 hover:border-magenta-400 transition-all shadow-lg hover:shadow-magenta-500/40"
+
   return (
-    <form onSubmit={handleSubmit} className="border-4 border-magenta-800 bg-gradient-to-br from-gray-900 to-black p-8 rounded-none">
+    <form onSubmit={handleSubmit} className={containerClass}>
+      {isProfessional && (
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500"></div>
+      )}
+      
       <div className="text-center mb-8">
-         <h2 className="font-pixel text-2xl text-magenta-400 mb-2">INSERT NEW PROJECT</h2>
-         <p className="text-gray-400 text-sm">Define the parameters for a new project</p>
+         <h2 className={isProfessional 
+            ? "text-2xl font-bold text-white mb-2 tracking-tight" 
+            : "font-pixel text-2xl text-magenta-400 mb-2"
+         }>
+           {isProfessional ? "Initialize New Project" : "INSERT NEW PROJECT"}
+         </h2>
+         <p className="text-gray-400 text-sm">
+           {isProfessional ? "Define parameters below to launch a new workspace." : "Define the parameters for a new project"}
+         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mb-6">
         <ArcadeInput 
           label="PROJECT TITLE" 
           name="title" 
@@ -70,83 +90,49 @@ export default function AddProjectForm({ onAddProject }) {
           placeholder="e.g. AI Sentinel"
           required
           error={errors.title}
-        />
-        <ArcadeInput 
-          label="DOMAIN" 
-          name="domain" 
-          value={formData.domain} 
-          onChange={handleChange} 
-          placeholder="e.g. Machine Learning"
-          required
-          error={errors.domain}
+          variant={variant}
         />
       </div>
 
-      <ArcadeInput 
-        label="REQUIRED PLAYERS (STUDENTS)" 
-        name="studentsRequired" 
-        value={formData.studentsRequired} 
-        onChange={handleChange} 
-        placeholder="e.g. 2-4" 
-        type="text"
-        required
-        error={errors.studentsRequired}
-      />
-
       <div className="mb-6">
-        <label className="block font-pixel text-sm text-cyan-400 mb-2 pixel-text">
-          PROBLEM STATEMENT <span className="text-red-400">*</span>
+        <label className={labelClass}>
+          PROJECT DESCRIPTION <span className="text-red-400">*</span>
         </label>
         <textarea
-          name="problemStatement"
-          value={formData.problemStatement}
+          name="description"
+          value={formData.description}
           onChange={handleChange}
-          className="w-full px-4 py-3 bg-gray-900 border-4 border-cyan-700 rounded-none text-white focus:border-cyan-400 focus:shadow-lg focus:shadow-cyan-500/50 outline-none transition-all h-32"
-          placeholder="Describe the challenge..."
+          className={textareaClass}
+          placeholder="Describe the project..."
         />
-        {errors.problemStatement && <div className="text-red-400 font-pixel text-xs mt-1">⚠ {errors.problemStatement}</div>}
-      </div>
-
-      <div className="mb-6">
-        <label className="block font-pixel text-sm text-cyan-400 mb-2 pixel-text">
-          EXPECTED SOLUTION <span className="text-red-400">*</span>
-        </label>
-        <textarea
-          name="expectedSolution"
-          value={formData.expectedSolution}
-          onChange={handleChange}
-          className="w-full px-4 py-3 bg-gray-900 border-4 border-cyan-700 rounded-none text-white focus:border-cyan-400 focus:shadow-lg focus:shadow-cyan-500/50 outline-none transition-all h-32"
-          placeholder="Describe the victory condition..."
-        />
-        {errors.expectedSolution && <div className="text-red-400 font-pixel text-xs mt-1">⚠ {errors.expectedSolution}</div>}
+        {errors.description && <div className="text-red-400 text-xs mt-1 font-bold">⚠ {errors.description}</div>}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ArcadeInput 
-          label="GITHUB REPO LINK" 
+          label="GITHUB REPO" 
           name="repoLink" 
           value={formData.repoLink} 
           onChange={handleChange} 
           placeholder="https://github.com/..."
           required
           error={errors.repoLink}
+          variant={variant}
         />
         <ArcadeInput 
-          label="COMMS CHANNEL (SQUAD LINK)" 
+          label="COMMUNICATION" 
           name="commsLink" 
           value={formData.commsLink} 
           onChange={handleChange} 
-          placeholder="WhatsApp Group / Discord Link"
+          placeholder="WhatsApp Group / Discord Channel Link"
           required
           error={errors.commsLink}
+          variant={variant}
         />
       </div>
 
-      <button 
-        type="submit" 
-        className="w-full py-4 mt-4 bg-gradient-to-r from-magenta-700 to-magenta-900 border-4 border-magenta-500 text-white font-pixel text-lg hover:from-magenta-600 hover:to-magenta-800 hover:border-magenta-400 transition-all shadow-lg hover:shadow-magenta-500/40"
-      >
-        + INITIALIZE PROJECT
+      <button type="submit" className={buttonClass}>
+        {isProfessional ? "+ DEPLOY PROJECT" : "+ INITIALIZE PROJECT"}
       </button>
 
     </form>
