@@ -17,22 +17,22 @@ export default function TeamPage() {
       name: 'Aadesh Deshmukh', 
       role: 'Secretary', 
       department: 'CSE-DS',
-      bio: 'Orchestrating the chaos, one pixel at a time.',
-      image: null 
+      bio: 'Curious engineering student driven to solve real-world problems- always learning, exploring, and turning ideas into impact.',
+      image: '/brains/aadesh.jpg' 
     },
     { 
       name: 'Aditya Kale', 
-      role: 'President', 
+      role: 'Chairperson', 
       department: 'CSE-DS',
-      bio: 'Compiling dreams into reality since 2024.',
-      image: null 
+      bio: 'The open source big brain behind OSCG',
+      image: '/brains/aditya.jpeg' 
     },
     { 
-      name: 'Person 3', 
-      role: 'Secretary', 
+      name: 'Sharayu Itkikar', 
+      role: 'Treasurer', 
       department: 'Design',
-      bio: 'Adding color to the void.',
-      image: null 
+      bio: 'tracking budgets, managing sponsorships and believing open-source makes tech better for everyone!',
+      image: '/brains/sharayu.jpeg'
     }
   ]
 
